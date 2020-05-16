@@ -1,8 +1,16 @@
+# gpio-programming-platform-device-sysfs
+
+
+# About the project
+The main aim of the project is to establish an interface between the Intel Galelio Gen II board and a series of Ultrasonic sensors(HC-SR04) in measuring the distance for a range of 4 metres.
+
+The project consist of two parts. The first part deals with the character devices and the second part deals in establishing the communication through sysfs file system.
+
 I've followed an incremental development approach. Part 1 will run on it's own with specific test file. Extending the part 1, I've done some tweaks in-order to support part 2 with the test file and test_script, to test both the parts.
 
 I've disabled the debug information, and printing only the important information as ALERT which can as well be controlled by adding/removing the macros.
 
-################################################# PART 1 #################################################
+# Part1
 
 Commands to execute:
  - Compile the program using "make" command.
@@ -10,11 +18,11 @@ Commands to execute:
  - Execute "insmod hcsr04_drv.ko n_gpio = x". x -> is the required number of gpio devices that needs to be registered.
  - To perform test, run "./hcsr04_tester".
 
-Steps executed in the test file:
+# Steps executed in the test file:
 
-Sample Output: (Moved the object while measuring. So there is a difference in length measured)
+**Sample Output: (Moved the object while measuring. So there is a difference in length measured)**
 
-************ USER OUTPUT *************
+**USER OUTPUT**
 
 Thread creation Successful. Performing Operations... 
 Write 1: Write Successful 
@@ -31,12 +39,12 @@ Reading data 6: distance-15cms 		 timestamp-90721813536
 Reading data 7: distance-11cms 		 timestamp-91368257698
 ******* Thread Exiting *********
 
-********** KERNEL OUTPUT ***************
+**KERNEL OUTPUT**
 
 [  148.565433] ALERT:Requested PIN already set as echo for this specific device 
 [  148.572731] ALERT:Requested PIN already set as trigger for this specific device 
 [  148.584473] ALERT:Triggering measurment from Write Function 
-[  148.594251] ALERT:**** There is an Ongoing Measurement ****
+[  148.594251] ALERT:**There is an Ongoing Measurement**
 [  150.190174] ALERT:#SUM: 160 		
 [  150.193092] ALERT:#AVERAGE_DISTANCE: 20 
 [  150.602967] ALERT:Triggering measurment from Write Function 
@@ -69,23 +77,23 @@ Reading data 7: distance-11cms 		 timestamp-91368257698
 [  193.314338] ALERT:HCSR_1 is opening 
 [  193.318034] ALERT:HCSR_2 is opening 
 
-################################################# PART 2 #################################################
+# PART 2
 
-Commands to execute:
+# Commands to execute:
  - Compile the program using "make" command.
  - Move PHCSR04_device.ko, PHCSR04_driver.ko, hcsr04_tester and test_script.sh files to the board.
  - Execute "insmod PHCSR04_device.ko" and "insmod PHCSR04_driver.ko". [This can be in any order]
  - Make the script executable by executing the following command "chmod +x test_script.sh"
  - To perform test, run "./hcsr04_tester" or test_script.sh.  
 
-About the test file:
+# About the test file:
  - Handled the case to avoid error for duplicate registration of pins from the same device. So test file can be ran multiple times along and along with the test script as well.
 
 
-Sample Output: (I first ran ./hcsr04_tester and test_script.sh with moving objects)
+# Sample Output: (I first ran ./hcsr04_tester and test_script.sh with moving objects)
 (Distance will return -1 if the buffer is empty. enable 1 will trigger one more measurement and after reading that will give us measured value)
 
-************ USER OUTPUT ***************
+**USER OUTPUT**
 root@quark:/# insmod PHCSR04_device.ko 
 root@quark:/# insmod PHCSR04_driver.ko 
 root@quark:/# ./hcsr04_tester 
@@ -126,7 +134,7 @@ Please wait...Writing 1 more value
 Reading distance
 12
 
-********** KERNEL OUTPUT ***************
+**KERNEL OUTPUT**
 [   47.448472] Device HCSR_1 registered 
 [   47.469651] Device HCSR_2 registered 
 [   51.345949] INFO:1Device found HCSR_1 20 
@@ -141,7 +149,7 @@ Reading distance
 [   51.432550] INFO:Device got binded with the driver 
 [   53.699734] INFO:HCSR_1 is opening 
 [   53.703474] INFO:HCSR_2 is opening 
-[   53.716919] INFO:****There is an Ongoing Measurement****
+[   53.716919] INFO:**There is an Ongoing Measurement**
 [   66.124582] INFO:HCSR_1 is closing 
 [   66.128143] INFO:HCSR_2 is closing 
 [   70.525661] INFO:Requested PIN already set as trigger for this specific device 
@@ -149,5 +157,3 @@ Reading distance
 [   72.564087] INFO:Requested PIN already set as echo for this specific device 
 [   72.571330] INFO:Echo Pin has been Set to 5 
 [   87.034268] INFO:There is no distance measures to read. Please enable device for new measurement.
-
-####################################################################################################################################
